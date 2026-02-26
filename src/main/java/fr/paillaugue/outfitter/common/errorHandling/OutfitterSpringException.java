@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import java.io.Serializable;
 
 public class OutfitterSpringException extends RuntimeException implements Serializable {
-    private HttpStatus status;
+    private final HttpStatus status;
 
     public OutfitterSpringException(HttpStatus status, String message) {
         super(message);

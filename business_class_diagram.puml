@@ -1,0 +1,66 @@
+@startuml(id=User)
+'https://plantuml.com/class-diagram
+
+enum ClothingItemType {
+    PANTS
+    SWEATER
+    DRESS
+    JACKET
+    SHIRT
+    SHOES
+    ACCESSORY
+}
+enum ClothingItemColor {
+    RED
+    BLUE
+    GREEN
+    BLACK
+    WHITE
+    YELLOW
+    PURPLE
+    ORANGE
+    PINK
+    BROWN
+    GRAY
+}
+enum WeatherType {
+    SUNNY
+    RAINY
+    COLD
+    SNOWY
+    + boolean isCold()
+    + boolean isWet()
+}
+
+
+class User {
+    - id: UUID
+    - username: String
+    - email: String
+    - passwordHash: String
+    - updatedAt: ZoneDateTime
+    - createdAt: ZoneDateTime
+}
+
+class ClothingItem {
+    - id: UUID
+    - type: ClothingItemType
+    - color: ClothingItemColor
+    - name: String
+    - description: String?
+    - lastWornAt: ZoneDateTime?
+    - updatedAt: ZoneDateTime
+    - createdAt: ZoneDateTime
+}
+
+class Outfit {
+    - id: UUID
+    - createdAt: ZoneDateTime
+}
+
+'Relationships
+Outfit "1" -> "*" ClothingItem : contains
+User "1" -> "*" Outfit : created by
+User "1" -> "*" ClothingItem : owns
+
+@enduml

@@ -1,20 +1,28 @@
 package fr.paillaugue.outfitter.user;
 
+import fr.paillaugue.outfitter.user.dto.CreateUserDTO;
 import fr.paillaugue.outfitter.user.dto.UserDTO;
 import fr.paillaugue.outfitter.user.entities.User;
-import fr.paillaugue.outfitter.user.exceptions.UserNotFoundException;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+    @Transactional
+    public UserDTO register(@Valid CreateUserDTO createUserDTO) {
+        var hashedPassword = this.passwordEncoder.encode(createUserDTO.password());
+        var user = new User(createUserDTO.username(), createUserDTO.email(), hashedPassword);
+        var savedUser = this.userRepository.save(user);
+        return UserDTO.fromEntity(savedUser);
     }
 }

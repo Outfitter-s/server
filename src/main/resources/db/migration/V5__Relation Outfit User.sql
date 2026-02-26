@@ -1,0 +1,5 @@
+ALTER TABLE outfit
+    ADD owner_id UUID;
+
+ALTER TABLE outfit
+    ADD CONSTRAINT FK_OUTFIT_ON_OWNER FOREIGN KEY (owner_id) REFERENCES "user" (id);

@@ -25,21 +25,21 @@ public class JwtTokenProvider {
         this.JWT_EXPIRATION = config.expiration();
     }
 
-    public String generateToken(UUID userId) {
+    public String generateToken(String username) {
         return Jwts.builder()
-                .setSubject(userId.toString())
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
     }
 
-    public UUID getUserIdFromToken(String token) {
-        return UUID.fromString(Jwts.parser()
+    public String getUsernameFromToken(String token) {
+        return Jwts.parser()
                 .setSigningKey(JWT_SECRET)
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject());
+                .getSubject();
     }
 
     public boolean validateToken(String token) {

@@ -1,5 +1,6 @@
 package fr.paillaugue.outfitter.user;
 
+import fr.paillaugue.outfitter.outfit.entities.Outfit;
 import fr.paillaugue.outfitter.user.entities.User;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -47,5 +48,13 @@ public class UserTests {
         user.setEmail("invalid-email");
         var violations = validator.validate(user);
         assert (!violations.isEmpty());
+    }
+
+    @Test
+    @DisplayName("User should have an outfit and an initial clothing item collection when calling addOutfit()")
+    public void testAddOutfit() {
+        var outfit = new Outfit();
+        user.addOutfit(outfit);
+        assert (user.getOutfits().contains(outfit));
     }
 }

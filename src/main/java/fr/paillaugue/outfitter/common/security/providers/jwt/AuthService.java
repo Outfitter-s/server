@@ -29,7 +29,7 @@ public class AuthService {
         String username = authentication.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
-        String token = jwtTokenProvider.generateToken(user.getId());
+        String token = jwtTokenProvider.generateToken(user.getUsername());
         return new AuthResponse(token);
     }
 }

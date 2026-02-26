@@ -8,6 +8,6 @@ public class UserNotFoundException extends OutfitterSpringException {
         super(HttpStatus.NOT_FOUND, "User "+username+" not found");
     }
     public UserNotFoundException() {
-        super(HttpStatus.NOT_FOUND, "User  not found");
+        super(HttpStatus.NOT_FOUND, "User not found");
     }
 }
