@@ -1,24 +1,25 @@
 services:
+  server:
+    build: .
+    container_name: outfiter_server
+    ports:
+      - '8080:8080'
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+
   db:
     image: postgres:18.1
     container_name: outfiter_db
     ports:
-      - '${POSTGRES_PORT}:5432'
+      - '${POSTGRES_PORT:-5432}:5432'
     env_file:
       - .env
     volumes:
       - pg_data:/var/lib/postgresql
 
-  valkey:
-    container_name: outfitter_valkey
-    image: valkey/valkey:9.0.1
-    command: valkey-server --save 60 1 --loglevel debug
-    ports:
-      - '${VALKEY_PORT:-6379}:6379'
-    volumes:
-      - valkey_data:/data
-
-
 volumes:
   pg_data:
-  valkey_data:
