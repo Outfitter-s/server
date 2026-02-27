@@ -18,7 +18,10 @@ import java.util.UUID;
     name = "\"user\"",
     uniqueConstraints = {
         @UniqueConstraint(
-            columnNames = {"username", "email"}
+            columnNames = {"username"}
+        ),
+        @UniqueConstraint(
+            columnNames = {"email"}
         )
     }
 )
@@ -99,5 +102,9 @@ public class User {
 
     public Collection<Outfit> getOutfits() {
         return outfits;
+    }
+
+    public Collection<ClothingItem> getClothingItems() {
+        return clothingItems;
     }
 }

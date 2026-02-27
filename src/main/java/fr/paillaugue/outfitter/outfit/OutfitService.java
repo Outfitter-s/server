@@ -2,6 +2,7 @@ package fr.paillaugue.outfitter.outfit;
 
 import fr.paillaugue.outfitter.clothingItem.ClothingItemRepository;
 import fr.paillaugue.outfitter.clothingItem.entities.ClothingItem;
+import fr.paillaugue.outfitter.clothingItem.exceptions.ClothingItemNotFoundException;
 import fr.paillaugue.outfitter.common.paging.PageDTO;
 import fr.paillaugue.outfitter.outfit.dto.OutfitDTO;
 import fr.paillaugue.outfitter.outfit.entities.Outfit;
@@ -10,11 +11,14 @@ import fr.paillaugue.outfitter.user.UserRepository;
 import fr.paillaugue.outfitter.user.dto.UserDTO;
 import fr.paillaugue.outfitter.user.exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class OutfitService {
@@ -35,11 +39,25 @@ public class OutfitService {
     }
 
     @Transactional
-    public OutfitDTO createForUser(UserDTO user, Collection<UUID> clothingItemIds) {
+    public OutfitDTO createForUser(UserDTO user, @Size(min = 1) Collection<UUID> clothingItemIds) {
         var managedUser = userRepository.findById(UUID.fromString(user.id()))
                 .orElseThrow(() -> new UserNotFoundException(user.id()));
-        var outfit = new Outfit(managedUser);
+
         Collection<ClothingItem> clothingItems = clothingItemRepository.findAllById(clothingItemIds);
+
+        Set<UUID> foundIds = clothingItems.stream()
+                .map(ClothingItem::getId)
+                .collect(Collectors.toSet());
+
+        Set<UUID> missingIds = clothingItemIds.stream()
+                .filter(id -> !foundIds.contains(id))
+                .collect(Collectors.toSet());
+
+        if (!missingIds.isEmpty()) {
+            throw new ClothingItemNotFoundException(missingIds);
+        }
+
+        var outfit = new Outfit(managedUser);
         outfit.setClothingItems(clothingItems);
         var savedOutfit = outfitRepository.save(outfit);
         managedUser.addOutfit(savedOutfit);

@@ -48,4 +48,8 @@ public class Outfit {
     public User getOwner() {
         return owner;
     }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }

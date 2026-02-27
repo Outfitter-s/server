@@ -9,7 +9,4 @@ public class OutfitNotFoundException extends OutfitterSpringException {
     public OutfitNotFoundException(UUID outfitId) {
         super(HttpStatus.NOT_FOUND, "Outfit "+outfitId+" not found");
     }
-    public OutfitNotFoundException() {
-        super(HttpStatus.NOT_FOUND, "Outfit not found");
-    }
 }
