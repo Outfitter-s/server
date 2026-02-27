@@ -1,6 +1,7 @@
 package fr.paillaugue.outfitter.clothingItem;
 
 import fr.paillaugue.outfitter.clothingItem.entities.ClothingItem;
+import fr.paillaugue.outfitter.user.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,6 @@ import java.util.UUID;
 public interface ClothingItemRepository extends JpaRepository<ClothingItem, UUID> {
     Page<ClothingItem> findByOwnerId(UUID userId, Pageable pageable);
     Collection<ClothingItem> findAllByOwnerId(UUID userId);
+
+    ClothingItem findByNameAndOwner(String name, User owner);
 }
